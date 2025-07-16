@@ -4,20 +4,10 @@ import { BookOpen, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
-import AIImageGenerator from "@/components/AIImageGenerator";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [coverImage, setCoverImage] = useState<string | null>(null);
-
-  const handleImageGenerated = (imageUrl: string) => {
-    setCoverImage(imageUrl);
-    // Update meta tags for social sharing
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    const twitterImage = document.querySelector('meta[name="twitter:image"]');
-    if (ogImage) ogImage.setAttribute('content', imageUrl);
-    if (twitterImage) twitterImage.setAttribute('content', imageUrl);
-  };
+  const [coverImage] = useState<string | null>("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80");
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -25,21 +15,46 @@ const Index = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('${coverImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80'}')`
+          backgroundImage: `url('${coverImage}')`
         }}
       />
       
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40" />
       
+      {/* Twinkling Stars */}
+      <div className="absolute inset-0">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute text-white opacity-70"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              fontSize: `${8 + Math.random() * 8}px`,
+              animationDelay: `${Math.random() * 4}s`
+            }}
+          >
+            <Sparkles className="animate-pulse" />
+          </div>
+        ))}
+      </div>
+      
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
         <div className="text-center space-y-8 max-w-md mx-auto">
-          {/* AI Image Generator - Show only if no cover image is set */}
-          {!coverImage && (
-            <AIImageGenerator onImageGenerated={handleImageGenerated} />
-          )}
-
           {/* App Logo/Icon */}
           <div className="relative">
             <div className="w-32 h-32 mx-auto bg-gradient-to-br from-red-600 to-orange-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
